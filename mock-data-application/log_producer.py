@@ -5,7 +5,7 @@ import json
 import random
 
 # Define Kafka broker address
-kafka_broker = 'localhost:29092'
+kafka_broker = 'localhost:8097'
 
 # Create Kafka producer configuration
 producer_config = {
@@ -46,7 +46,7 @@ for i in range(1, 1000):
         }
 
     # Produce the log message to the Kafka topic
-    producer.produce('orders', key=str(i), value=json.dumps(log_message))
+    producer.produce('logging', key=str(i), value=json.dumps(log_message))
     producer.flush()
 
     logger.info(f'Sent {log_source} log message #{i}')

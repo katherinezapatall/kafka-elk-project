@@ -1,7 +1,7 @@
 from confluent_kafka import Consumer, KafkaError
 
 # Define Kafka broker address
-kafka_broker = 'localhost:29092'
+kafka_broker = 'localhost:8097'
 
 # Create Kafka consumer configuration
 consumer_config = {
@@ -14,7 +14,7 @@ consumer_config = {
 consumer = Consumer(consumer_config)
 
 # Subscribe to the Kafka topic
-consumer.subscribe(['orders'])
+consumer.subscribe(['logging'])
 
 try:
     while True:
