@@ -5,7 +5,7 @@ import json
 import random
 
 # Define Kafka broker address
-kafka_broker = 'localhost:29092'
+kafka_broker = 'localhost:8097'
 
 # Create Kafka producer configuration
 producer_config = {
@@ -34,7 +34,8 @@ for i in range(1, 1000):
         log_message = {
             'timestamp': time.time(),
             'source': log_source,
-            'message': f'User authentication log message #{i}'
+            'message': f'User authentication id #{i} failed',
+            'remote_ip': '10.10.10.10'
         }
     elif log_source == 'http_request_processing':
         status_code = random.choice(http_status_codes)
@@ -42,11 +43,12 @@ for i in range(1, 1000):
             'timestamp': time.time(),
             'source': log_source,
             'message': f'HTTP request processing log message #{i}',
-            'http_status_code': status_code
+            'http_status_code': status_code,
+            'remote_ip': '10.x.10.x'
         }
 
     # Produce the log message to the Kafka topic
-    producer.produce('orders', key=str(i), value=json.dumps(log_message))
+    producer.produce('logging', key=str(i), value=json.dumps(log_message))
     producer.flush()
 
     logger.info(f'Sent {log_source} log message #{i}')
