@@ -27,7 +27,7 @@ log_sources = ['authentication', 'http_request_processing']
 http_status_codes = [200, 400, 401, 402, 403, 404, 500]
 
 # Simulate random log messages
-for i in range(1, 1000):
+for i in range(1, 1000000):
     log_source = random.choice(log_sources)
 
     if log_source == 'authentication':
