@@ -95,7 +95,7 @@ services:
       - elastic
 
   consumer:
-    image: log-consumer:1.9
+    image: katherinezapata/consumer:1.0
     container_name: consumer
     depends_on:
       - kibana
@@ -103,7 +103,7 @@ services:
       - elastic
 
   producer:
-    image: log_producer:1.0
+    image: katherinezapata/producer:1.0
     container_name: producer
     depends_on:
       - kibana
