@@ -12,11 +12,14 @@ This project includes the implementation of the infrastructure as code for Real-
 
 The first part includes the infrastructure as code to deploy the following microservices:
 
-- Kafka broker 1 and 2: Container 1 and 2 from the diagram "LOGGING/MONITORING ARCHITECTURE"
-- Zookeeper: Container 3 from the diagram "LOGGING/MONITORING ARCHITECTURE"
-- Logstash: Container 4 from the diagram "LOGGING/MONITORING ARCHITECTURE"
-- Elasticsearch: Container 5 from the diagram "LOGGING/MONITORING ARCHITECTURE"
-- Kibana: Container 6 from the diagram "LOGGING/MONITORING ARCHITECTURE"
+-	Kafka broker 1 y 2 : Container 1 y 2 from [Figure 1](images/architecture.png).
+-	Zookeeper: Container 3 from [Figure 1](images/architecture.png).
+-	Logstash: Container 4 from [Figure 1](images/architecture.png).
+-	Elasticsearch: Container 5 from [Figure 1](images/architecture.png).
+-	Kibana: Container 6 from [Figure 1](images/architecture.png).
+-	Producer application: Container D from [Figure 1](images/architecture.png).
+-	Consumer application: Container A- C from [Figure 1](images/architecture.png).
+
 
 These are the containers required to implement Real-Time Logging and Monitoring, where:
 
@@ -24,6 +27,9 @@ These are the containers required to implement Real-Time Logging and Monitoring,
 - Logstash: Logstash is responsible for data pre-processing and aggregation. It consumes log messages from Kafka, applies transformations, and forwards the data to Elasticsearch.
 - Elasticsearch: Elasticsearch serves as the central repository for log data, offering fast indexing and search capabilities, enabling real-time analysis.
 - Kibana: Kibana is used as a visualization and monitoring tool, allowing users to create custom dashboards, set up alerts, and explore log data trends.
+- Producer application: producing valuable log data concerning their activities and performance.
+- Consumer application: Consume the log data from Kafka. 
+
 
 ### Steps to reproduce
 
@@ -38,13 +44,15 @@ These are the containers required to implement Real-Time Logging and Monitoring,
 
 3. Depending on the machine capacity, it will takes a while until everything is up and running.
 4. Verification:
-    - Verify that all containers are running: run the command docker ps. The output will be as in the image 2.
+    - Verify that all containers are running: run the command docker ps. The output will be as in the [Figure 2](images/containers.png).
         - Get IDs of currently active brokers:
+        
            ```
             docker exec -it zookeeper /bin/zookeeper-shell localhost:2181
             ls /brokers/ids
             ```
         - The output will be:
+
             ```
             Connecting to localhost:2181
 
@@ -60,39 +68,25 @@ These are the containers required to implement Real-Time Logging and Monitoring,
             [1, 2]
             ```
 
-### Part 2:
 
-This part involves the development of the application, including the generation of mock logs for producing and consuming messages.
+### Part 2
 
-After spinning up the infrastructure, you can test the project by publishing messages to Kafka using the mock application written in Python:
+This part involves the development of the applications, to produce and consume the messages.
+The code can be found in: 
 
-### Steps to reproduce
+- https://github.com/katherinezapatall/kafka-elk-project/blob/main/mock-data-application
 
-1. Install dependencies:
-    - Python
-2. Run the command in the folder mock-data-application
-    ```
-    python3 log_producer.py
-    ```
-3. It possible to update the number of mock messages, modifying this range:
-    - https://github.com/katherinezapatall/kafka-elk-project/blob/main/mock-data-application/log_producer.py#L30
+After spinning up the infrastructure, you can validate the messages produced and consumed by checking the logs of “producer” and “consumer” containers, as shown in  [Figure 3](images/producer-logs.png) and [Figure 4](images/consumer-logs.png)
 
+Note that, it is possible to update the number of produced messages, modifying this range: 
+- https://github.com/katherinezapatall/kafka-elk-project/blob/main/mock-data-application/log_producer.py#L30
 
-After sending the messages, we can validate the correct pre-processing and aggregation of our data by Logstash into Elasticsearch by creating an index and dashboard in Kibana. An example could be a dashboard displaying HTTP 400 and 500 errors, as shown in image number 3.
+Additionally, you can validate the correct pre-processing and aggregation of the data by Logstash into Elasticsearch by creating an index and dashboard in Kibana. An example could be a dashboard displaying HTTP 400 and 500 errors, as shown in the [Figure 5](images/example-dashboard.png).
+ 
+### Figures List:
 
-Additionally, a Python application has been created to consume logs from Kafka and write them to the console.
-
-
-### Steps to reproduce
-
-4. Run the command in the folder mock-data-application.
-    ``` 
-    python3 log_consumer.py
-    ```
-The output will be the history of messages from the beginning. Also, I will show the messages consumed in real time. Example: 
-    ```
-    Received message: {"timestamp": 1696924077.1596959, "source": "http_request_processing", "message": "HTTP request processing log message #28", "http_status_code": 500, "remote_ip": "10.x.10.x"}
-    Received message: {"timestamp": 1696924077.831316, "source": "authentication", "message": "User authentication id #29 failed", "remote_ip": "10.10.10.10"}
-    Received message: {"timestamp": 1696924078.3446631, "source": "authentication", "message": "User authentication id #30 failed", "remote_ip": "10.10.10.10"}
-    Received message: {"timestamp": 1696924079.200612, "source": "authentication", "message": "User authentication id #31 failed", "remote_ip": "10.10.10.10"}
-    ```
+- [Figure 1](images/architecture.png). “Real time  Logging/Monitoring architecture”
+- [Figure 2](images/containers.png). “Verification of containers running:”
+- [Figure 3](images/producer-logs.png). “Producer Logs”
+- [Figure 4](images/consumer-logs.png). “Consumer Logs”
+- [Figure 5](images/example-dashboard.png). “Kibana Dashboard”

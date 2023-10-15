@@ -1,7 +1,8 @@
+import logging
 from confluent_kafka import Consumer, KafkaError
 
 # Define Kafka broker address
-kafka_broker = 'localhost:8098'
+kafka_broker = 'kafka1:9092'
 
 # Create Kafka consumer configuration
 consumer_config = {
@@ -16,6 +17,10 @@ consumer = Consumer(consumer_config)
 # Subscribe to the Kafka topic
 consumer.subscribe(['logging'])
 
+# Configure the logging settings
+logging.basicConfig(level=logging.INFO)  # Set your desired log level
+logger = logging.getLogger(__name__)
+
 try:
     while True:
         msg = consumer.poll(1.0)  # Poll for messages every 1 second
@@ -25,12 +30,12 @@ try:
         if msg.error():
             # Handle any Kafka errors
             if msg.error().code() == KafkaError._PARTITION_EOF:
-                print("Reached end of topic")
+                logger.info("Reached end of topic")
             else:
-                print(f"Error: {msg.error().str()}")
+                logger.error(f"Error: {msg.error().str()}")
         else:
-            # Print the received log message
-            print(f"Received message: {msg.value().decode('utf-8')}")
+            # Log the received log message
+            logger.info(f"Received message: {msg.value().decode('utf-8')}")
 
 except KeyboardInterrupt:
     pass

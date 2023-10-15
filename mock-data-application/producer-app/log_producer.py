@@ -5,7 +5,7 @@ import json
 import random
 
 # Define Kafka broker address
-kafka_broker = 'localhost:8097'
+kafka_broker = 'kafka2:9092'
 
 # Create Kafka producer configuration
 producer_config = {
